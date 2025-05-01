@@ -17,23 +17,26 @@ class Post(models.Model):
     text = models.TextField()
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='%(class)ss')
+        User, on_delete=models.CASCADE, related_name='posts')
     image = models.ImageField(
         upload_to='posts/', null=True, blank=True)
     group = models.ForeignKey(
         Group, on_delete=models.SET_NULL,
-        related_name='%(class)ss', blank=True, null=True
+        related_name='posts', blank=True, null=True
     )
 
     def __str__(self):
         return self.text[:21]
 
+    class Meta():
+        ordering = ('-pub_date',)
+
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='%(class)ss')
+        User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='%(class)ss')
+        Post, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
@@ -41,9 +44,14 @@ class Comment(models.Model):
 
 class Follow(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='%(class)ss')
+        User, on_delete=models.CASCADE, related_name='followers')
     following = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='%(class)ss')
+        User, on_delete=models.CASCADE, related_name='following')
 
     class Meta:
-        unique_together = ('user', 'following')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'following'],
+                name='unique_user_following'
+            )
+        ]
