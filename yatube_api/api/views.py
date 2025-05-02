@@ -6,7 +6,7 @@ from rest_framework.permissions import (
     IsAuthenticated, IsAuthenticatedOrReadOnly
 )
 
-from posts.models import Comment, Group, Post, Follow
+from posts.models import Comment, Group, Post
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     CommentSerializer, GroupSerializer, PostSerializer, FollowSerializer
@@ -48,7 +48,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class CreateListViewSet(
         mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
-    ):
+):
     pass
 
 

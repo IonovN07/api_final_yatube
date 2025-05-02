@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.core.files.base import ContentFile
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
@@ -59,6 +58,6 @@ class FollowSerializer(serializers.ModelSerializer):
         ]
 
     def validate_following(self, value):
-            if value == self.context['request'].user:
-                raise serializers.ValidationError('Нельзя подписаться на себя')
-            return value
+        if value == self.context['request'].user:
+            raise serializers.ValidationError('Нельзя подписаться на себя')
+        return value
